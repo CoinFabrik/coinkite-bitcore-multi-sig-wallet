@@ -1,0 +1,12 @@
+{
+  "account": {
+    "m": 2,
+    "name": "coinfabrik on Coinkite.com",
+    "type": "multisig",
+    "xpubkeys": [
+      "xpub661MyMwAqRbcGWgcbzgTxQXHz71cstnhGS54Ho6fRy39EaJFYbQBhUCXJm5wsiZtzAhajJScjJEFaiTSbfcAhbGbC8fKDRwyQz6utFup1UH",
+      "xpub661MyMwAqRbcEbQQajGo2uF1cm64PexhGE8M7NzBZat8BTJ4jQ5TW6SbfLfvfXvtViGNdJsrRe3Wkv4Y2ZpnVVPuTDEa3gek96dU5LunXKv",
+      "xpub661MyMwAqRbcFQUrtb8qFDoN7qKxnKzJ895gHGNPSzYrChLrSF1B9unXzWTHXYTcMTZrjsijWnbEJG3QjZ4Qdy9mdc56HQawfqFcVP8VxpW"
+    ]
+  }
+}

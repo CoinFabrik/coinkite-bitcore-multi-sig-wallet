@@ -1,0 +1,63 @@
+{
+  "CK_acct_type": "p2sh",
+  "balance": {
+    "currency": "BTC",
+    "decimal": 0,
+    "integer": 0,
+    "integer_scale": 8,
+    "pretty": "\u0e3f 0.0 BTC",
+    "string": "0"
+  },
+  "balance_optimistic": {
+    "currency": "BTC",
+    "decimal": 0,
+    "integer": 0,
+    "integer_scale": 8,
+    "pretty": "\u0e3f 0.0 BTC",
+    "string": "0"
+  },
+  "balance_pending": {
+    "currency": "BTC",
+    "decimal": 0,
+    "integer": 0,
+    "integer_scale": 8,
+    "pretty": "\u0e3f 0.0 BTC",
+    "string": "0"
+  },
+  "coin_type": "BTC",
+  "cosigners": [
+    {
+      "CK_refnum": "13B8AE9034-1CC9D9",
+      "CK_type": "CKCoSigner",
+      "coin_type": "BTC",
+      "user_label": "fer-coinkite",
+      "xpubkey": "xpub\u22ef utFup1UH",
+      "xpubkey_check": "utFup1UH"
+    },
+    {
+      "CK_refnum": "7EA20DAC2C-48BA4E",
+      "CK_type": "CKCoSigner",
+      "coin_type": "BTC",
+      "user_label": "My XPubkey",
+      "xpubkey": "xpub\u22ef U5LunXKv",
+      "xpubkey_check": "U5LunXKv"
+    },
+    {
+      "CK_refnum": "3A8897D631-EBDFD1",
+      "CK_type": "CKCoSigner",
+      "coin_type": "BTC",
+      "user_label": "Co-Signer #3",
+      "xpubkey": "xpub\u22ef cVP8VxpW",
+      "xpubkey_check": "cVP8VxpW"
+    }
+  ],
+  "is_closed": false,
+  "m_of_n": [
+    2,
+    3
+  ],
+  "name": "coinfabrik",
+  "num_keys": 3,
+  "num_required": 2,
+  "quick_deposit": "3NPfFxSJFJ3vkNHNh2ZxELaAeacTCGmuxA"
+}
