@@ -1,0 +1,89 @@
+{
+  "args": {
+    "amount": {
+      "currency": "BTC",
+      "decimal": 0.0003,
+      "integer": 30000,
+      "integer_scale": 8,
+      "pretty": "? 0.0003 BTC",
+      "string": "0.0003"
+    },
+    "dest": "1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8",
+    "from_account": {
+      "CK_acct_type": "p2sh",
+      "CK_refnum": "37EADEA77A-EEC5DB",
+      "CK_type": "CKAccountP2SH",
+      "coin_type": "BTC",
+      "is_closed": false,
+      "m_of_n": [
+        2,
+        3
+      ],
+      "name": "coinfabrik",
+      "num_keys": 3,
+      "num_required": 2
+    }
+  },
+  "funds_limiting": {},
+  "next_step": "https://coinkite.com/co-sign/9B41B8A6FE-4538BE.CJwCjw.nADQN7BG07aLgRZUVHn7lAQivwY",
+  "result": {
+    "CK_refnum": "9B41B8A6FE-4538BE",
+    "CK_req_type": "send",
+    "CK_type": "CKReqSend",
+    "account": "37EADEA77A-EEC5DB",
+    "amount": {
+      "currency": "BTC",
+      "decimal": 0.0003,
+      "integer": 30000,
+      "integer_scale": 8,
+      "pretty": "? 0.0003 BTC",
+      "string": "0.0003"
+    },
+    "amount_so_far": {
+      "currency": "BTC",
+      "decimal": -0.0013,
+      "integer": -130000,
+      "integer_scale": 8,
+      "pretty": "? -0.0013 BTC",
+      "string": "-0.0013"
+    },
+    "archived_at": null,
+    "authorized_at": "2015-07-30T18:46:39.078382Z",
+    "coin_type": "BTC",
+    "cosign": {
+      "account_m_of_n": [
+        2,
+        3
+      ],
+      "cosign_url": "https://coinkite.com/co-sign/9B41B8A6FE-4538BE.CJwCkA.PdeQmYKFKbUre3h5qJfA8BUBVyo",
+      "num_signed": 0,
+      "pin_code": "547521",
+      "signed_by": {
+        "13B8AE9034-1CC9D9": false,
+        "3A8897D631-EBDFD1": false,
+        "7EA20DAC2C-48BA4E": false
+      }
+    },
+    "created_at": "2015-07-30T18:46:38.152890Z",
+    "desc": "Send Funds",
+    "destination": "1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8",
+    "detail_page": "https://coinkite.com/detail-view/9B41B8A6FE-4538BE",
+    "include_pin": false,
+    "is_authorized": false,
+    "is_completed": false,
+    "maybe_delayed_warning": true,
+    "memo": null,
+    "network_transactions": [
+      {
+        "CK_refnum": "5D492E203D-3991C5",
+        "CK_type": "CKPublicTxn",
+        "block": null,
+        "coin_type": "BTC",
+        "hash": "TBD",
+        "transmitted_at": null
+      }
+    ],
+    "public_msg": null,
+    "related_receipts": []
+  }
+}

@@ -15,7 +15,7 @@ exports.request = function(endPoint, method, params, cb) {
             'X-CK-Timestamp': authHeaders['X-CK-Timestamp']
         },
         method: method,
-        json: params
+        json: params || true
     }, cb);
 };
 ////v1/new/send

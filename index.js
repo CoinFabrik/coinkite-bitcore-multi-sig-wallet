@@ -1,10 +1,6 @@
 var coinkite = require('./coinkite');
 var bitcore = require('bitcore');
 
-var HDPrivateKey = bitcore.HDPrivateKey;
-var hdPrivateKey = new HDPrivateKey('xprv9s21ZrQH143K2vQPnZbpt5rdZoVUNsGSkvA5Usxmtf1sKu1hthgvc7U49DeixZHNAwPnQWq9hyCB37SdTddVYwyiEt7m6sJcrLMQp75QcBu');
-
-console.log('priv: ' + hdPrivateKey.xprivkey + '\n' + 'pub: ' + hdPrivateKey.hdPublicKey);
 var keys = [{priv: 'xpub661MyMwAqRbcGWgcbzgTxQXHz71cstnhGS54Ho6fRy39EaJFYbQBhUCXJm5wsiZtzAhajJScjJEFaiTSbfcAhbGbC8fKDRwyQz6utFup1UH'},
     {
     priv: 'xprv9s21ZrQH143K2vQPnZbpt5rdZoVUNsGSkvA5Usxmtf1sKu1hthgvc7U49DeixZHNAwPnQWq9hyCB37SdTddVYwyiEt7m6sJcrLMQp75QcBu',
@@ -28,12 +24,22 @@ var p3a = p3.derive('m/0');
 var p2shAddress = new bitcore.Address([p1a.publicKey,
     p2a.publicKey, p3a.publicKey], 2);
 console.log(p2shAddress.toString());
-process.exit();
-coinkite.request('/v1/my/self', 'GET', {}, function callback(error, response, body) {
+//process.exit();
+    coinkite.request('/v1/new/send', 'PUT', {
+        amount: '0.0003',
+        account: 'coinfabrik',
+        dest: '1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8'
+    }, function callback(error, response, body) {
     if (!error && response.statusCode == 200) {
-        var info = JSON.parse(body);
-        console.log(body);
+        //var info = JSON.parse(body);
+        try {
+            console.log(JSON.stringify(body));
+        }
+        catch(e) {
+            console.log(body);
+        }
     } else {
+        console.log(body);
         console.log(error);
         console.log(response.statusCode);
     }
