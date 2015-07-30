@@ -24,12 +24,7 @@ var p3a = p3.derive('m/0');
 var p2shAddress = new bitcore.Address([p1a.publicKey,
     p2a.publicKey, p3a.publicKey], 2);
 console.log(p2shAddress.toString());
-//process.exit();
-    coinkite.request('/v1/new/send', 'PUT', {
-        amount: '0.0003',
-        account: 'coinfabrik',
-        dest: '1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8'
-    }, function callback(error, response, body) {
+function callbackGenerico(error, response, body) {
     if (!error && response.statusCode == 200) {
         //var info = JSON.parse(body);
         try {
@@ -43,4 +38,16 @@ console.log(p2shAddress.toString());
         console.log(error);
         console.log(response.statusCode);
     }
-});
+}
+
+
+coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE', 'GET', null,callbackGenerico);
+
+//process.exit();
+/*
+    coinkite.request('/v1/new/send', 'PUT', {
+        amount: '0.0003',
+        account: 'coinfabrik',
+        dest: '1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8'
+    },callbackGenerico);
+*/

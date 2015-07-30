@@ -1,0 +1,34 @@
+{
+  "cosigners": [
+    {
+      "CK_refnum": "13B8AE9034-1CC9D9",
+      "CK_type": "CKCoSigner",
+      "coin_type": "BTC",
+      "user_label": "fer-coinkite",
+      "xpubkey": "xpub? utFup1UH",
+      "xpubkey_check": "utFup1UH"
+    },
+    {
+      "CK_refnum": " 7EA20DAC2C-48BA4E",
+      "CK_type": "CKCoSigner",
+      "coin_type": "BTC",
+      "user_label": "My XPubkey",
+      "xpubkey": "xpub? U5LunXKv",
+      "xpubkey_check": "U5LunXKv"
+    },
+    {
+      "CK_refnum": "3A8897D631-EBDFD1",
+      "CK_type": " CKCoSigner",
+      "coin_type": "BTC",
+      "user_label": "Co-Signer #3",
+      "xpubkey": "xpub? cVP8VxpW",
+      "xpubkey_check": "cVP8VxpW"
+    }
+  ],
+  "has_signed_already": {
+    "13B8AE9034-1CC9D9": false,
+    "3A8897D631-EBDFD1": false,
+    "7EA20DAC2C-48BA4E": false
+  },
+  "request": "9B41B8A6FE-4538BE"
+}
