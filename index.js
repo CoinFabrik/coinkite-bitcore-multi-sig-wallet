@@ -41,7 +41,7 @@ function callbackGenerico(error, response, body) {
 }
 
 
-coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE', 'GET', null,callbackGenerico);
+//coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE/13B8AE9034-1CC9D9/sign', 'PUT', {},callbackGenerico);
 
 //process.exit();
 /*

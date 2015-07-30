@@ -1,0 +1,40 @@
+{
+  "request": "9B41B8A6FE-4538BE",
+  "signing_info": {
+    "cosigner": "7EA20DAC2C-48BA4E",
+    "has_signed_already": false,
+    "input_info": [
+      {
+        "full_sp": "m/0",
+        "out_num": 1,
+        "sp": "0",
+        "txn": "d2ab354ab15b286ac714bec2d12e822e3b701713b1b0175f28789eac36a2d44c"
+      }
+    ],
+    "inputs": [
+      [
+        "0",
+        "375030f6a5271727f4c9cebc322e1cf73c979f2dfda226d57dbfbc4b556e4c04"
+      ]
+    ],
+    "raw_unsigned_txn": "01000000014cd4a236ac9e78285f17b0b11317703b2e822ed1c2be14c76a285bb14a35abd20100000000ffffffff0230750000000000001976a914bed3809ce1524fbed4833132a580aaf73b19f4a188ac70460d000000000017a914ffdf8c0fa0fe0585433bbc3f406a794d8f8c96df8700000000",
+    "redeem_scripts": {
+      "0": {
+        "addr": "3NPfFxSJFJ3vkNHNh2ZxELaAeacTCGmuxA",
+        "redeem": "5221027dbc8993286327139d9f17cbc2b90a59c63f427da5e19dde63a2c084bf2793d12102a1b222f0d1fef933cf13ef2f17feb715603bf3ac6202d6fc6031f45d17d5d6d72102cfd3d9bda555a41cd89b88a98d1dbe2c42274239b8de2a8bf9eb85cb4423fe5853ae"
+      }
+    },
+    "req_keys": {
+      "0": [
+        "18aWaxB9h3JQ4pPRtW1wSAknRMNNPsFmdD",
+        [
+          7.313710855131459e+76,
+          1.8301270334176927e+76
+        ]
+      ]
+    },
+    "request": "9B41B8A6FE-4538BE",
+    "xpubkey_check": "U5LunXKv",
+    "xpubkey_display": "xpub? U5LunXKv"
+  }
+}

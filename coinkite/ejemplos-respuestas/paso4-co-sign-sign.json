@@ -1,0 +1,35 @@
+{
+  "message": "Signature added, but further signatures are required.",
+  "result": {
+    "CK_refnum": "9B41B8A6FE-4538BE",
+    "CK_req_type": "send",
+    "CK_type": "CKReqSend",
+    "account": "37EADEA77A-EEC5DB",
+    "amount": {
+      "currency": "BTC",
+      "decimal": 0.0003,
+      "integer": 30000,
+      "integer_scale": 8,
+      "pretty": "? 0.0003 BTC",
+      "string": "0.0003"
+    },
+    "amount_so_far": {
+      "currency": "BTC",
+      "decimal": -0.0013,
+      "integer": -130000,
+      "integer_scale": 8,
+      "pretty": "? -0.0013 BTC",
+      "string": "-0.0013"
+    },
+    "archived_at": null,
+    "authorized_at": "2015-07-30T18:46:39.078382Z",
+    "coin_type": "BTC",
+    "desc": "Send Funds",
+    "destination": "1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8",
+    "include_pin": false,
+    "is_completed": false,
+    "maybe_delayed_warning": true,
+    "memo": null,
+    "public_msg": null
+  }
+}

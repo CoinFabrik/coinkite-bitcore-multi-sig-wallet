@@ -9,7 +9,7 @@
       "xpubkey_check": "utFup1UH"
     },
     {
-      "CK_refnum": " 7EA20DAC2C-48BA4E",
+      "CK_refnum": "7EA20DAC2C-48BA4E",
       "CK_type": "CKCoSigner",
       "coin_type": "BTC",
       "user_label": "My XPubkey",
