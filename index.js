@@ -46,6 +46,7 @@ console.log(bitcore.Address.fromPublicKey(new bitcore.HDPublicKey(keys[2].priv, 
 var hdkey = (new bitcore.HDPrivateKey(keys[2].priv, bitcore.Networks.livenet))
     .derive('m/0');
 console.log(hdkey.privateKey.toAddress() + '\n' + hdkey.privateKey.toWIF());
+console.log('Signature:' + require('./sign').getSignature(hdkey.privateKey, "375030f6a5271727f4c9cebc322e1cf73c979f2dfda226d57dbfbc4b556e4c04"));
 var p2shAddress = getReceiveAddress(_.pluck(keys, 'pub'), 0, 2);
 console.log(p2shAddress.publicKey);
 process.exit();
