@@ -11,6 +11,7 @@
   "dependencies": {
     "bitcore": "^0.12.14",
     "bitcore-message": "^0.11.1",
+    "bluebird": "^2.9.34",
     "coinkite-javascript": "0.0.1",
     "crypto": "0.0.3",
     "lodash": "^3.10.0",
