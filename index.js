@@ -2,16 +2,22 @@ var coinkite = require('./coinkite');
 var bitcore = require('bitcore');
 var _ = require('lodash');
 var Message = require('bitcore-message');
+
 var keys = [
     {
         //priv in Coinkite's possession
+        //m/0: 12MdK9vE8nkEjj5UEz2kyHK9p9JqqMVS4i
         pub: 'xpub661MyMwAqRbcGWgcbzgTxQXHz71cstnhGS54Ho6fRy39EaJFYbQBhUCXJm5wsiZtzAhajJScjJEFaiTSbfcAhbGbC8fKDRwyQz6utFup1UH'
     },
     {
+        //cosigner: "3A8897D631-EBDFD1"
+        //m/0: 1KavCAxKWgQKbfWGgNhNyB8BZzoWTZA5Xh
         priv: 'xprv9s21ZrQH143K2vQPnZbpt5rdZoVUNsGSkvA5Usxmtf1sKu1hthgvc7U49DeixZHNAwPnQWq9hyCB37SdTddVYwyiEt7m6sJcrLMQp75QcBu',
         pub: 'xpub661MyMwAqRbcFQUrtb8qFDoN7qKxnKzJ895gHGNPSzYrChLrSF1B9unXzWTHXYTcMTZrjsijWnbEJG3QjZ4Qdy9mdc56HQawfqFcVP8VxpW'
     },
     {
+        //cosigner: "7EA20DAC2C-48BA4E"
+        //m/0: 18aWaxB9h3JQ4pPRtW1wSAknRMNNPsFmdD
         priv: 'xprv9s21ZrQH143K27KwUhjnfmJH4jFZzCEqu1CkJzaa1FM9JexvBrmCxJ87p5VPqY8Uh7495zwyi62HSVCAwDMsL1F8qkFroDPQdiQ6iWdfadL',
         pub: 'xpub661MyMwAqRbcEbQQajGo2uF1cm64PexhGE8M7NzBZat8BTJ4jQ5TW6SbfLfvfXvtViGNdJsrRe3Wkv4Y2ZpnVVPuTDEa3gek96dU5LunXKv'
     }];
@@ -40,7 +46,7 @@ console.log(bitcore.Address.fromPublicKey(new bitcore.HDPublicKey(keys[2].priv, 
 var hdkey = (new bitcore.HDPrivateKey(keys[2].priv, bitcore.Networks.livenet))
     .derive('m/0');
 console.log(hdkey.privateKey.toAddress() + '\n' + hdkey.privateKey.toWIF());
-var p2shAddress = getReceiveAddress(_.pluck(keys, 'pub'), 1, 2);
+var p2shAddress = getReceiveAddress(_.pluck(keys, 'pub'), 0, 2);
 console.log(p2shAddress.publicKey);
 process.exit();
 
@@ -82,7 +88,7 @@ coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE/7EA20DAC2C-48BA4E/sign', 'PUT', 
     signatures: [{
         signature:	'HwvqiIHS3BW4cMoD75+7gmZJXJgxJLPBqeIvlap0CKZMRNvxkerHmSjSe57zhMCV7eMdTsz7KDBt1AiPWVSUsYM=',
         for_hash:	'01000000014cd4a236ac9e78285f17b0b11317703b2e822ed1c2be14c76a285bb14a35abd20100000000ffffffff0230750000000000001976a914bed3809ce1524fbed4833132a580aaf73b19f4a188ac70460d000000000017a914ffdf8c0fa0fe0585433bbc3f406a794d8f8c96df8700000000',
-        subkey_path:	'm/0'
+        subkey_path:	'0'
     }]
 
 },callbackGenerico);
