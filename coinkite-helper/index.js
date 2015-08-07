@@ -1,10 +1,14 @@
 var request = require('request'),
     CK_API = require('coinkite-javascript/coinkite-api.js'),
-    keys = require('./api-keys');
+    keys = require('./api-keys'),
+    _ = require('lodash');
 
-request.debug = true;
-exports.request = function(endPoint, method, params, cb) {
+
+request.debug = false;
+
+function makeRequest(endPoint, method, params, cb) {
     var authHeaders = CK_API.auth_headers(keys.API_KEY, keys.API_SECRET, endPoint);
+    console.log('Calling ' + endPoint);
     request({
         url: 'https://api.coinkite.com' + endPoint,
         headers: {
@@ -25,7 +29,19 @@ exports.request = function(endPoint, method, params, cb) {
         }
         cb(null, response, body);
     });
+}
+
+var RateLimiter = require('limiter').RateLimiter;
+
+var limiter = new RateLimiter(1, 3500); // at most 1 request every 3500 ms
+exports.request = function throttledRequest() {
+    var requestArgs = arguments;
+    limiter.removeTokens(1, function() {
+        makeRequest.apply(this, requestArgs);
+    });
 };
+
+
 
 exports.validateKeys = function() {
     //TODO
@@ -76,4 +92,8 @@ exports.sign = function(sendRequestRef, cosignerRef, signatures, callback) {
     exports.request('/v1/co-sign/' + sendRequestRef + '/' + cosignerRef, 'PUT', {
         signatures: signatures
     }, callback);
+};
+
+exports.cancelSend = function (sendRequestRef, callback) {
+    exports.request('/v1/update/' + sendRequestRef + '/cancel_send', 'PUT', {}, callback);
 };

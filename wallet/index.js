@@ -1,7 +1,7 @@
 var Promise = require('bluebird'),
     ck = require('../coinkite-helper'),
     _ = require('lodash'),
-    getSignature = require('./sign');
+    getSignature = require('./sign').getSignature;
 Promise.promisifyAll(ck);
 
 /**
@@ -74,13 +74,19 @@ Wallet.prototype.send = function(destination, amount) {
         return ck.getCosignRequirementsAsync(currentSendRequest, cosigner.CK_refnum).spread(function(response, body) {
             return body;
         });
-    }).all(function(cosigningInfo) {
+    }).then(function(cosigningInfo) {
         console.log(JSON.stringify(cosigningInfo));
     }).catch(function(e) {
         if (currentSendRequest) {
-            //TODO: cancel send
+            console.log('Cancelling send request...');
+            return ck.cancelSendAsync(currentSendRequest).then(function() {
+                currentSendRequest = null;
+            }).then(function() {
+                throw e;
+            });
+        } else {
+            throw e;
         }
-        throw e;
     });
 };
 

@@ -14,7 +14,7 @@
     "bluebird": "^2.9.34",
     "coinkite-javascript": "0.0.1",
     "crypto": "0.0.3",
-    "lodash": "^3.10.0",
+    "limiter": "^1.0.5",
     "request": "^2.60.0"
   }
 }
