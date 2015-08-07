@@ -1,4 +1,4 @@
-var e = require('bitcore/lib/crypto/ecdsa');
+var ecdsa = require('bitcore/lib/crypto/ecdsa');
 
 /**
  * Adds "01" at the end.
@@ -12,6 +12,6 @@ function addSighashAll(signature) {
 
 exports.getSignature = function(privateKey, sighash) {
     var b = new Buffer(sighash, 'hex');
-    var sig = e.sign(b, privateKey).set({nhashtype: 1});
+    var sig = ecdsa.sign(b, privateKey).set({nhashtype: 1});
     return addSighashAll(sig).toString('hex');
 };
