@@ -1,7 +1,7 @@
-var coinkite = require('./coinkite');
+var coinkite = require('./coinkite-helper');
 var bitcore = require('bitcore');
 var _ = require('lodash');
-var Message = require('bitcore-message');
+var Wallet = require('./wallet').Wallet;
 
 var keys = [
     {
@@ -42,6 +42,22 @@ function getReceiveAddress(hdPublicKeys, index, requiredSignatures){
     publicKeys = derivedPublicKeys;
     return new bitcore.Address(derivedPublicKeys, requiredSignatures);
 }
+
+var wallet = new Wallet({
+    account: 'coinfabrik',
+    keys: keys,
+    cosigners: 3,
+    threshold: 2
+});
+
+wallet.send('1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8', 0.001).then(function() {
+    console.log('Funds sent!');
+}).catch(function(e) {
+    console.log('Error caught:' + e);
+});
+
+/*
+
 console.log(bitcore.Address.fromPublicKey(new bitcore.HDPublicKey(keys[2].priv, bitcore.Networks.livenet).publicKey, bitcore.Networks.livenet));
 var hdkey = (new bitcore.HDPrivateKey(keys[2].priv, bitcore.Networks.livenet))
     .derive('m/0');
@@ -49,25 +65,6 @@ console.log(hdkey.privateKey.toAddress() + '\n' + hdkey.privateKey.toWIF());
 console.log('Signature:' + require('./sign').getSignature(hdkey.privateKey, "375030f6a5271727f4c9cebc322e1cf73c979f2dfda226d57dbfbc4b556e4c04"));
 var p2shAddress = getReceiveAddress(_.pluck(keys, 'pub'), 0, 2);
 console.log(p2shAddress.publicKey);
-process.exit();
-
-var t = (new bitcore.Transaction('01000000014cd4a236ac9e78285f17b0b11317703b2e822ed1c2be14c76a285bb14a35abd2' +
-    '0100000000ffffffff0230750000000000001976a914bed3809ce1524fbed4833132a580aaf73b19f4a188ac70460d000000000' +
-    '017a914ffdf8c0fa0fe0585433bbc3f406a794d8f8c96df8700000000'));
-//console.log(t.toObject());
-console.log(publicKeys);
-t._fromMultisigUtxo({
-    address: '3NPfFxSJFJ3vkNHNh2ZxELaAeacTCGmuxA',
-    txId: 'd2ab354ab15b286ac714bec2d12e822e3b701713b1b0175f28789eac36a2d44c',
-    outputIndex: 1,
-    script: bitcore.Script.buildScriptHashOut(bitcore.Script.buildMultisigOut(publicKeys, 2)),
-    satoshis: 30000
-}, publicKeys, 2);
-//console.log(t.toObject());
-console.log(t.getSignatures(hdkey.privateKey)[0]);
-//t.sign(hdkey.privateKey);
-//t = t.from({'txId': 'd2ab354ab15b286ac714bec2d12e822e3b701713b1b0175f28789eac36a2d44c', outputIndex: 1, satoshis: 1000, script: 'OP_DUP ...'});
-//console.log(t.sign(hdkey.privateKey));
 
 function callbackGenerico(error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -84,16 +81,15 @@ function callbackGenerico(error, response, body) {
         console.log(response.statusCode);
     }
 }
-process.exit();
-coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE/7EA20DAC2C-48BA4E/sign', 'PUT', {
-    signatures: [{
-        signature:	'HwvqiIHS3BW4cMoD75+7gmZJXJgxJLPBqeIvlap0CKZMRNvxkerHmSjSe57zhMCV7eMdTsz7KDBt1AiPWVSUsYM=',
-        for_hash:	'01000000014cd4a236ac9e78285f17b0b11317703b2e822ed1c2be14c76a285bb14a35abd20100000000ffffffff0230750000000000001976a914bed3809ce1524fbed4833132a580aaf73b19f4a188ac70460d000000000017a914ffdf8c0fa0fe0585433bbc3f406a794d8f8c96df8700000000',
-        subkey_path:	'0'
-    }]
 
+coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE/7EA20DAC2C-48BA4E/sign', 'PUT', {
+    signatures: [['304402202c848476cdd2f62c6050e4fbcea73e25eb075dcc83c29efbaef6ae3bf5651fb30220169bf4ecff9c6a239c5efe8058ec35ed4d21981ebb00f10530aca77acd39b82b01',
+        '375030f6a5271727f4c9cebc322e1cf73c979f2dfda226d57dbfbc4b556e4c04',
+        '0'
+    ]]
 },callbackGenerico);
-//coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE/13B8AE9034-1CC9D9/sign', 'PUT', {},callbackGenerico);
+*/
+//coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE', 'GET', {},callbackGenerico);
 
 //process.exit();
 /*
