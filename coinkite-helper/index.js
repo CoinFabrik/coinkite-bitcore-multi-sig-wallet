@@ -16,7 +16,15 @@ exports.request = function(endPoint, method, params, cb) {
         },
         method: method,
         json: params || true
-    }, cb);
+    }, function(error, response, body) {
+        if (error) {
+            return cb(error);
+        }
+        if (response && response.statusCode !== 200) {
+            return cb(new Error(response.statusCode + ': ' + JSON.stringify(body)));
+        }
+        cb(null, response, body);
+    });
 };
 
 exports.validateKeys = function() {
