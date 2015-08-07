@@ -52,8 +52,6 @@ var wallet = new Wallet({
 
 wallet.send('1JPzktin88qmzFJDYEDCDiWFDrBt1vuyi8', 0.001).then(function() {
     console.log('Funds sent!');
-}).catch(function(e) {
-    console.log('Error caught:' + e);
 });
 
 /*
