@@ -98,7 +98,7 @@ Wallet.prototype.send = function(destination, amount) {
     var self = this,
         currentSendRequest,
         successfullSignatures = 0;
-    console.log('Creating a new send request...');
+    console.log('Creating a new send request for ' + amount + 'BTC to ' + destination);
     return ck.newSendAsync(this.account, amount, destination).spread(function(response, body) {
         console.log('Getting cosigners\' information...');
         currentSendRequest = body.result.CK_refnum;
@@ -119,7 +119,7 @@ Wallet.prototype.send = function(destination, amount) {
         if (successfullSignatures >= self.threshold) {
             return;
         }
-        return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo).spread(function(response, body) {
+        return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo).spread(function(response) {
             if (response.statusCode == 200) {
                 successfullSignatures++;
             }
