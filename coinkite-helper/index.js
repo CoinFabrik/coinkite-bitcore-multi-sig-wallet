@@ -25,7 +25,13 @@ function makeRequest(endPoint, method, params, cb) {
             return cb(error);
         }
         if (response && response.statusCode !== 200) {
-            return cb(new Error(response.statusCode + ': ' + JSON.stringify(body)));
+            if (response.statusCode == 429) {
+                console.log('Too many requests error, retrying...');
+                exports.request(endPoint, method, params, cb);
+                return;
+            } else {
+                return cb(new Error(response.statusCode + ': ' + JSON.stringify(body)));
+            }
         }
         cb(null, response, body);
     });
