@@ -8,7 +8,6 @@ request.debug = false;
 
 function makeRequest(endPoint, method, params, cb) {
     var authHeaders = CK_API.auth_headers(keys.API_KEY, keys.API_SECRET, endPoint);
-    console.log('Calling ' + endPoint);
     request({
         url: 'https://api.coinkite.com' + endPoint,
         headers: {
