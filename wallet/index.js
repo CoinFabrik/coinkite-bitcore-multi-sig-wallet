@@ -82,19 +82,22 @@ Wallet.prototype.sign = function(cosigner, signingInfo) {
         console.log('Sending signatures: ' + JSON.stringify(signatures));
         return ck.signAsync(sendRequest, cosigner.CK_refnum, signatures).spread(function(response, body) {
             console.log(JSON.stringify(body));
+            return [response, body];
         });
     } else {
         console.log('Cosigner ' + cosigner.user_label + ' private key not in possession,' +
             ' requesting for Coinkite to sign...');
         return ck.signAsync(sendRequest, cosigner.CK_refnum, []).spread(function(response, body) {
             console.log('Coinkite\'s signing appears to be successful: ' + JSON.stringify(body));
+            return [response, body];
         });
     }
 };
 
 Wallet.prototype.send = function(destination, amount) {
     var self = this,
-        currentSendRequest;
+        currentSendRequest,
+        successfullSignatures = 0;
     console.log('Creating a new send request...');
     return ck.newSendAsync(this.account, amount, destination).spread(function(response, body) {
         console.log('Getting cosigners\' information...');
@@ -106,17 +109,27 @@ Wallet.prototype.send = function(destination, amount) {
     }).map(function(cosigner) {
         console.log('Getting signing requirements for cosigner ' + cosigner.user_label);
         return ck.getCosignRequirementsAsync(currentSendRequest, cosigner.CK_refnum).spread(function(response, body) {
+            console.log('Gotten signing info:' + JSON.stringify(body.signing_info));
             return {
                 cosigner: cosigner,
                 signingInfo: body.signing_info
             };
         });
-    }).map(function(cosigningInfo) {
-        console.log('Gotten signing info:' + JSON.stringify(cosigningInfo.signingInfo));
-        return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo);
+    }).each(function(cosigningInfo) {
+        if (successfullSignatures >= self.threshold) {
+            return;
+        }
+        return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo).spread(function(response, body) {
+            if (response.statusCode == 200) {
+                successfullSignatures++;
+            }
+            if (successfullSignatures >= self.threshold) {
+                console.log('Enough signatures reached, transaction sent to public network.');
+            }
+        });
     }).catch(function(e) {
         if (currentSendRequest) {
-            console.log('Cancelling send request...');
+            console.log('Error found, cancelling send request...');
             return ck.cancelSendAsync(currentSendRequest).then(function() {
                 currentSendRequest = null;
             }).then(function() {
