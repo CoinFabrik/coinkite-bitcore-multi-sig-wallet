@@ -89,7 +89,7 @@ exports.getCosignRequirements = function(sendRequestRef, cosignerRef, callback) 
  * @param callback
  */
 exports.sign = function(sendRequestRef, cosignerRef, signatures, callback) {
-    exports.request('/v1/co-sign/' + sendRequestRef + '/' + cosignerRef, 'PUT', {
+    exports.request('/v1/co-sign/' + sendRequestRef + '/' + cosignerRef + '/sign', 'PUT', {
         signatures: signatures
     }, callback);
 };
