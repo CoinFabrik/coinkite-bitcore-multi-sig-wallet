@@ -96,9 +96,8 @@ Wallet.prototype.sign = function(cosigner, signingInfo) {
 
 Wallet.prototype.send = function(destination, amount) {
     var self = this,
-        currentSendRequest,
-        successfullSignatures = 0;
-    console.log('Creating a new send request for ' + amount + 'BTC to ' + destination);
+        currentSendRequest;
+    console.log('Creating a new send request for ' + amount + ' BTC to ' + destination);
     return ck.newSendAsync(this.account, amount, destination).spread(function(response, body) {
         console.log('Getting cosigners\' information...');
         currentSendRequest = body.result.CK_refnum;
@@ -116,17 +115,11 @@ Wallet.prototype.send = function(destination, amount) {
             };
         });
     }).each(function(cosigningInfo) {
-        if (successfullSignatures >= self.threshold) {
-            return;
-        }
-        return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo).spread(function(response) {
-            if (response.statusCode == 200) {
-                successfullSignatures++;
-            }
-            if (successfullSignatures >= self.threshold) {
-                console.log('Enough signatures reached, transaction sent to public network.');
-            }
-        });
+        return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo)
+            .catch(function(e) {
+                console.log('Error when sending ' + cosigningInfo.cosigner.user_label +
+                    '\'s signatures (They may already have all the necessary signatures):\n' + JSON.stringify(e));
+            });
     }).catch(function(e) {
         if (currentSendRequest) {
             console.log('Error found, cancelling send request...');
