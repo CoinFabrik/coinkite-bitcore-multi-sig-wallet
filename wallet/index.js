@@ -1,7 +1,8 @@
 var Promise = require('bluebird'),
     ck = require('../coinkite-helper'),
     _ = require('lodash'),
-    getSignature = require('./sign').getSignature;
+    getSignature = require('./sign').getSignature,
+    bitcore = require('bitcore');
 Promise.promisifyAll(ck);
 
 /**
@@ -43,16 +44,49 @@ Wallet.prototype.checkCosigners = function(cosigners) {
     });
 };
 
+function getSignatures(cosigningInfo, hdPrivateKey) {
+    return cosigningInfo.input_info.map(function(input, index) {
+        var sighash = cosigningInfo.inputs[index][1],
+            pathIndex = input.sp,
+            address = cosigningInfo.req_keys[pathIndex][0],
+            privateKey = new bitcore.HDPrivateKey(hdPrivateKey, bitcore.Networks.livenet)
+                .derive(input.full_sp)
+                .privateKey;
+        if (cosigningInfo.inputs[index][0] !== pathIndex) {
+            throw 'Expected input to have pathIndex = ' + pathIndex;
+        }
+        if (address !== privateKey.toAddress().toString()) {
+            throw 'Expected address found in signing info (' + address +') to match address' +
+                ' derived by "' + input.full_sp + '" derivation path from hd key ' +
+                hdPrivateKey.toString() + ' (' + privateKey.toAddress().toString() + ')';
+        }
+        return [
+            getSignature(privateKey, sighash),
+            sighash,
+            pathIndex
+        ]
+    });
+}
 
-Wallet.prototype.attemptSign = function(sendRequest, cosigner) {
-    var keys = this.getCosignerKeys(cosigner);
+Wallet.prototype.sign = function(cosigner, signingInfo) {
+    var sendRequest = signingInfo.request,
+        signatures,
+        keys;
+    if (signingInfo.has_signed_already) {
+        return;
+    }
+    keys = this.getCosignerKeys(cosigner);
     if (keys.priv) {
-        console.log('Cosigner ' + cosigner.user_label + '\'s private key found, signing...');
-
+        console.log('Cosigner ' + cosigner.user_label + ' hd private key found, signing...');
+        signatures = getSignatures(signingInfo, keys.priv);
+        console.log('Sending signatures: ' + JSON.stringify(signatures));
+        return ck.signAsync(sendRequest, cosigner.CK_refnum, signatures).spread(function(response, body) {
+            console.log(JSON.stringify(body));
+        });
     } else {
-        console.log('Cosigner ' + cosigner.user_label + '\'s private key not in possession,' +
+        console.log('Cosigner ' + cosigner.user_label + ' private key not in possession,' +
             ' requesting for Coinkite to sign...');
-        return ck.signAsync(sendRequest, cosigner.CK_refnum, {}).spread(function(response, body) {
+        return ck.signAsync(sendRequest, cosigner.CK_refnum, []).spread(function(response, body) {
             console.log('Coinkite\'s signing appears to be successful: ' + JSON.stringify(body));
         });
     }
@@ -72,10 +106,14 @@ Wallet.prototype.send = function(destination, amount) {
     }).map(function(cosigner) {
         console.log('Getting signing requirements for cosigner ' + cosigner.user_label);
         return ck.getCosignRequirementsAsync(currentSendRequest, cosigner.CK_refnum).spread(function(response, body) {
-            return body;
+            return {
+                cosigner: cosigner,
+                signingInfo: body.signing_info
+            };
         });
-    }).then(function(cosigningInfo) {
-        console.log(JSON.stringify(cosigningInfo));
+    }).map(function(cosigningInfo) {
+        console.log('Gotten signing info:' + JSON.stringify(cosigningInfo.signingInfo));
+        return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo);
     }).catch(function(e) {
         if (currentSendRequest) {
             console.log('Cancelling send request...');
