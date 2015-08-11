@@ -118,7 +118,7 @@ Wallet.prototype.send = function(destination, amount) {
         return self.sign(cosigningInfo.cosigner, cosigningInfo.signingInfo)
             .catch(function(e) {
                 console.log('Error when sending ' + cosigningInfo.cosigner.user_label +
-                    '\'s signatures (They may already have all the necessary signatures):\n' + JSON.stringify(e));
+                    '\'s signatures (Coinkite may already have all the necessary signatures):\n' + JSON.stringify(e));
             });
     }).catch(function(e) {
         if (currentSendRequest) {
