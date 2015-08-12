@@ -97,11 +97,9 @@ Wallet.prototype.sign = function(cosigner, signingInfo) {
 
 function printSigningStatus(cosignInfo) {
     console.log('Signature status:');
-    cosignInfo.cosigners.map(function(c) {
-        return c.user_label + ' (' + c.CK_refnum + ')' +
-            (cosignInfo.has_signed_already[c.CK_refnum] ? ' has signed.' : ' has not signed.');
-    }).forEach(function(status) {
-        console.log(status);
+    cosignInfo.cosigners.forEach(function(c) {
+        console.log(c.user_label + ' (' + c.CK_refnum + ')' +
+            (cosignInfo.has_signed_already[c.CK_refnum] ? ' has signed.' : ' has not signed.'));
     });
 }
 
