@@ -35,7 +35,7 @@ Wallet.prototype.getCosignerKeys = function(cosigner) {
  * Checks that the cosigners' HD public keys exists in this.keys.
  * @param {Object} cosigners
  */
-Wallet.prototype.checkCosigners = function(cosigners) {
+Wallet.prototype.checkCosignersKeys = function(cosigners) {
     var self = this;
     _.each(cosigners, function(c) {
         if (!self.getCosignerKeys(c)) {
@@ -95,20 +95,35 @@ Wallet.prototype.sign = function(cosigner, signingInfo) {
     }
 };
 
-Wallet.prototype.send = function(destination, amount) {
+function printSigningStatus(cosignInfo) {
+    console.log('Signature status:');
+    cosignInfo.cosigners.map(function(c) {
+        return c.user_label + ' (' + c.CK_refnum + ')' +
+            (cosignInfo.has_signed_already[c.CK_refnum] ? ' has signed.' : ' has not signed.');
+    }).forEach(function(status) {
+        console.log(status);
+    });
+}
+
+function getCosignersLeftToSign(cosignInfo) {
+    return cosignInfo.cosigners.filter(function(c) {
+        return !cosignInfo.has_signed_already[c.CK_refnum];
+    });
+}
+
+Wallet.prototype.performCosigningProcess = function(cosignInfo) {
     var self = this,
-        currentSendRequest;
-    console.log('Creating a new send request for ' + amount + ' BTC to ' + destination);
-    return ck.newSendAsync(this.account, amount, destination).spread(function(response, body) {
-        console.log('Getting cosigners\' information...');
-        currentSendRequest = body.result.CK_refnum;
-        return ck.getCosignersAsync(currentSendRequest);
-    }).spread(function(response, body) {
-        self.checkCosigners(body.cosigners);
-        return body.cosigners;
-    }).map(function(cosigner) {
+        leftToSign = getCosignersLeftToSign(cosignInfo),
+        sendRequest = cosignInfo.request;
+    self.checkCosignersKeys(cosignInfo.cosigners);
+    printSigningStatus(cosignInfo);
+    if (leftToSign.length == 0) {
+        console.log('All cosigners signed, transaction successful.');
+        return;
+    }
+    return Promise.map(leftToSign, function(cosigner) {
         console.log('Getting signing requirements for cosigner ' + cosigner.user_label);
-        return ck.getCosignRequirementsAsync(currentSendRequest, cosigner.CK_refnum).spread(function(response, body) {
+        return ck.getCosignRequirementsAsync(sendRequest, cosigner.CK_refnum).spread(function(response, body) {
             console.log('Gotten signing info:' + JSON.stringify(body.signing_info));
             return {
                 cosigner: cosigner,
@@ -121,6 +136,23 @@ Wallet.prototype.send = function(destination, amount) {
                 console.log('Error when sending ' + cosigningInfo.cosigner.user_label +
                     '\'s signatures (Coinkite may already have all the necessary signatures):\n' + JSON.stringify(e));
             });
+    }).then(function() {
+        return ck.getCosignersAsync(sendRequest);
+    }).spread(function(response, body) {
+        return self.performCosigningProcess(body);
+    });
+};
+
+Wallet.prototype.send = function(destination, amount) {
+    var self = this,
+        currentSendRequest;
+    console.log('Creating a new send request for ' + amount + ' BTC to ' + destination);
+    return ck.newSendAsync(this.account, amount, destination).spread(function(response, body) {
+        currentSendRequest = body.result.CK_refnum;
+        console.log('Getting cosigners\' information...');
+        return ck.getCosignersAsync(currentSendRequest);
+    }).spread(function(response, body) {
+        return self.performCosigningProcess(body);
     }).catch(function(e) {
         if (currentSendRequest) {
             console.log('Error found, cancelling send request...');
