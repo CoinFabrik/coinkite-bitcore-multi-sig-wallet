@@ -18,6 +18,7 @@ var Wallet = function (params) {
     this.keys = params.keys;
     this.cosigners = params.cosigners;
     this.threshold = params.threshold;
+    this.network = params.network;
 };
 
 function keyHasChecksum(key, checksum) {
@@ -44,12 +45,12 @@ Wallet.prototype.checkCosigners = function(cosigners) {
     });
 };
 
-function getSignatures(cosigningInfo, hdPrivateKey) {
+function getSignatures(cosigningInfo, hdPrivateKey, network) {
     return cosigningInfo.input_info.map(function(input, index) {
         var sighash = cosigningInfo.inputs[index][1],
             pathIndex = input.sp,
             address = cosigningInfo.req_keys[pathIndex][0],
-            privateKey = new bitcore.HDPrivateKey(hdPrivateKey, bitcore.Networks.livenet)
+            privateKey = new bitcore.HDPrivateKey(hdPrivateKey, network)
                 .derive(input.full_sp)
                 .privateKey;
         if (cosigningInfo.inputs[index][0] !== pathIndex) {
@@ -78,7 +79,7 @@ Wallet.prototype.sign = function(cosigner, signingInfo) {
     keys = this.getCosignerKeys(cosigner);
     if (keys.priv) {
         console.log('Cosigner ' + cosigner.user_label + ' hd private key found, signing...');
-        signatures = getSignatures(signingInfo, keys.priv);
+        signatures = getSignatures(signingInfo, keys.priv, this.network);
         console.log('Sending signatures: ' + JSON.stringify(signatures));
         return ck.signAsync(sendRequest, cosigner.CK_refnum, signatures).spread(function(response, body) {
             console.log(JSON.stringify(body));
