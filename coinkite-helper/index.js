@@ -29,6 +29,9 @@ function makeRequest(endPoint, method, params, cb) {
                 exports.request(endPoint, method, params, cb);
                 return;
             } else {
+                if (response.statusCode == 401) {
+                    console.error('Unauthorized. Check your API keys in /coinkite-helper/api-keys.js');
+                }
                 return cb(new Error(response.statusCode + ': ' + JSON.stringify(body)));
             }
         }
@@ -44,12 +47,6 @@ exports.request = function throttledRequest() {
     limiter.removeTokens(1, function() {
         makeRequest.apply(this, requestArgs);
     });
-};
-
-
-
-exports.validateKeys = function() {
-    //TODO
 };
 
 /**
