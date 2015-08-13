@@ -1,7 +1,7 @@
 var coinkite = require('./coinkite-helper');
 var bitcore = require('bitcore');
 var _ = require('lodash');
-var Wallet = require('./wallet').Wallet;
+var wallet = require('./wallet');
 
 var keysTestnet = [
     {
@@ -34,6 +34,14 @@ function getReceiveAddress(hdPublicKeys, index, requiredSignatures){
     }));
     return new bitcore.Address(derivedPublicKeys, requiredSignatures);
 }
+
+wallet.get('coinfabrik', keysTestnet).then(function(wallet){
+  return wallet.send('2MuwbT2BkNxF9HDjypBgzfMGtovLqAcbs89', 0.0003);
+}).then(function() {
+    console.log('Funds sent!');
+});
+
+/*
 var wallet = new Wallet({
     account: 'coinfabrik',
     keys: keysTestnet,
@@ -42,11 +50,11 @@ var wallet = new Wallet({
     network: bitcore.Networks.testnet
 });
 
-wallet.send('mhwvywznycjb2SFawAVXBY9QeVxhvu9qTy', 0.001).then(function() {
+wallet.send('2MuwbT2BkNxF9HDjypBgzfMGtovLqAcbs89', 0.00038763).then(function() {
     console.log('Funds sent!');
 });
-/*
 
+/*
 console.log(bitcore.Address.fromPublicKey(new bitcore.HDPublicKey(keys[2].priv, bitcore.Networks.livenet).publicKey, bitcore.Networks.livenet));
 var hdkey = (new bitcore.HDPrivateKey(keys[2].priv, bitcore.Networks.livenet))
     .derive('m/0');
@@ -70,6 +78,11 @@ function callbackGenerico(error, response, body) {
         console.log(error);
     }
 }
+
+//coinkite.newSend('coinfabrik', 1.444, '2MuwbT2BkNxF9HDjypBgzfMGtovLqAcbs89', callbackGenerico);
+//coinkite.getCosignRequirements('0D8CF4C817-A91D1E', '1EC3A1CFFE-2DAE34', callbackGenerico);
+//coinkite.sign('0D8CF4C817-A91D1E', '1EC3A1CFFE-2DAE34', [], callbackGenerico);
+
 /*
 coinkite.request('/v1/co-sign/9B41B8A6FE-4538BE/7EA20DAC2C-48BA4E/sign', 'PUT', {
     signatures: [['304402202c848476cdd2f62c6050e4fbcea73e25eb075dcc83c29efbaef6ae3bf5651fb30220169bf4ecff9c6a239c5efe8058ec35ed4d21981ebb00f10530aca77acd39b82b01',

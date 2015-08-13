@@ -113,7 +113,6 @@ Wallet.prototype.performCosigningProcess = function(cosignInfo) {
     var self = this,
         leftToSign = getCosignersLeftToSign(cosignInfo),
         sendRequest = cosignInfo.request;
-    self.checkCosignersKeys(cosignInfo.cosigners);
     printSigningStatus(cosignInfo);
     if (leftToSign.length == 0) {
         console.log('All cosigners signed, transaction successful.');
@@ -165,4 +164,38 @@ Wallet.prototype.send = function(destination, amount) {
     });
 };
 
-exports.Wallet = Wallet;
+function getNetworkName(currencySymbol) {
+    switch (currencySymbol) {
+        case 'BTC': return 'livenet';
+        case 'XTN': return 'testnet';
+    }
+}
+
+exports.get = function getWallet(accountName, keys) {
+    return ck.requestAsync('/v1/account/' + accountName, 'GET', {}).spread(function(response, body) {
+        var acc = body.account,
+            networkName = getNetworkName(acc.coin_type),
+            wallet;
+        if (!networkName) {
+            throw new Error('The account has an unsupported currency: ' + acc.coin_type);
+        }
+        if (!acc.cosigners) {
+            throw new Error('Account ' + accountName + ' is not multisignature.');
+        }
+        wallet = new Wallet({
+            account: accountName,
+            keys: keys,
+            cosigners: acc.num_keys,
+            threshold: acc.num_required,
+            network: bitcore.Networks[networkName]
+        });
+
+        wallet.checkCosignersKeys(acc.cosigners);
+        console.log('Succesfully retrieved ' + accountName + ' account:\n' +
+            '\tType: ' + acc.num_required + '-of-' + acc.num_keys + '\n' +
+            '\tBalance: ' + acc.balance_optimistic.pretty + '\n' +
+            '\tQuick deposit address: ' + acc.quick_deposit
+        );
+        return wallet;
+    })
+};
